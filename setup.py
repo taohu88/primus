@@ -29,4 +29,10 @@ setup(
         "Topic :: App framework",
         "License :: OSI Approved :: MIT License",
     ],
-)
+    python_requires='>=3.6',
+    install_requires=[
+        'dataclasses;python_version>="3.6"',
+        'category_encoders>=2.0',
+        'pandas>=0.24',
+        'numpy>=1.16'
+    ],)
