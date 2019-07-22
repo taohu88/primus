@@ -10,9 +10,11 @@ import numpy as np
 import pandas as pd
 from pandas import DataFrame
 from datetime import date, datetime
+from sklearn.preprocessing import FunctionTransformer
 
 
-__all__ = ['add_datepart', 'add_elapsed_times', 'make_date', 'add_cyclic_datepart']
+__all__ = ['add_datepart', 'add_elapsed_times', 'make_date', 'add_cyclic_datepart',
+           'date_transformer', 'cyclic_date_transformer']
 
 
 def make_date(df: DataFrame, date_field: str):
@@ -80,6 +82,10 @@ def add_datepart(df: DataFrame, field_name: str, prefix: str = None, drop: bool 
     return df
 
 
+date_transformer = FunctionTransformer(add_datepart, check_inverse=False)
+cyclic_date_transformer = FunctionTransformer(add_cyclic_datepart, check_inverse=False)
+
+
 def _get_elapsed(df: DataFrame, field_names: Collection[str], date_field: str, base_field: str, prefix: str):
     for f in field_names:
         day1 = np.timedelta64(1, 'D')
@@ -118,4 +124,3 @@ def add_elapsed_times(df: DataFrame, field_names: Collection[str], date_field: s
         work_df = work_df.merge(tmp, 'left', [date_field, base_field], suffixes=['', s])
     work_df.drop(field_names, 1, inplace=True)
     return df.merge(work_df, 'left', [date_field, base_field])
-
